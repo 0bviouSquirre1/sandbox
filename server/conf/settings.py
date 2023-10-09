@@ -33,7 +33,12 @@ from evennia.settings_default import *
 
 # This is the name of your game. Make it catchy!
 SERVERNAME = "sandbox"
-
+GLOBAL_SCRIPTS = {
+    "world_clock": {
+        "typeclass": "world.world_clock.WorldClock",
+        "desc": "World Clock"
+    }
+}
 
 ######################################################################
 # Settings given in secret_settings.py override those in this file.

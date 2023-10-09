@@ -1,4 +1,4 @@
-from evennia import Command
+from evennia import Command, GLOBAL_SCRIPTS
 from evennia.utils import create, search
 
 class CmdBrew(Command):
@@ -12,8 +12,8 @@ class CmdBrew(Command):
         location = caller.location  # Get the location of the caller
 
         # Check if the caller has a kettle/teapot and a heat source in the same location
-        heat_source = search.search_typeclass(typeclass="world.gpt_heatsources.HeatSource")[0]
-        kettle_teapot = caller.search("kettle", location=caller.location, typeclass="world.gpt_teaequipment.TeaEquipment")
+        heat_source = search.search_typeclass(typeclass="world.heat_sources.HeatSource")[0]
+        kettle_teapot = caller.search("kettle", location=location, typeclass="world.tea_equipment.TeaEquipment")
 
         if not (kettle_teapot and heat_source):
             caller.msg("You need a kettle/teapot and a heat source in the same location to brew tea.")
@@ -31,6 +31,14 @@ class CmdBrew(Command):
         if not (water and tea_leaves):
             caller.msg("The kettle/teapot needs water and tea leaves to brew tea.")
             return
+
+        # advance time
+        delta = 3
+        clock = GLOBAL_SCRIPTS.world_clock
+        if clock:
+            clock.advance(delta)
+        else:
+            caller.msg("Where is the clock")
 
         # Burn fuel from the heat source (adjust the fuel consumption)
         if heat_source.burn_fuel(10):  # Adjust the fuel consumption as needed
@@ -72,7 +80,7 @@ class CmdLight(Command):
         caller = self.caller
 
         # Check if the caller has a heat source in the current location
-        heat_sources = search.search_typeclass(typeclass="world.gpt_heatsources.HeatSource")
+        heat_sources = search.search_typeclass(typeclass="world.heat_sources.HeatSource")
         for source in heat_sources:
             if source.location == caller.location:
                 heat_source = source

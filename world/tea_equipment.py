@@ -1,11 +1,10 @@
-from evennia import DefaultObject
+from evennia import DefaultObject, AttributeProperty
 
 class TeaEquipment(DefaultObject):
     """
     Typeclass for tea-making equipment.
     """
-    def at_object_creation(self):
-        self.db.equipment_type = "generic"  # Equipment type (e.g., "teapot", "teacup", etc.)
+    equipment_type = AttributeProperty(default="generic")
 
     def use(self, caller):
         """

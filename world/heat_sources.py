@@ -1,19 +1,18 @@
-from evennia import DefaultObject
+from evennia import DefaultObject, AttributeProperty
 
 class HeatSource(DefaultObject):
     """
     Typeclass for heat sources.
     """
-    def at_object_creation(self):
-        self.db.fuel = 100  # Initial fuel level (adjust as needed)
-        self.db.is_hot = False  # Check if the heat source is hot
+    fuel = AttributeProperty(default=100) # Initial fuel level (adjust as needed)
+    is_hot = AttributeProperty(default=False)
 
     def burn_fuel(self, amount):
         """
         Burn fuel from the heat source.
         """
-        if self.db.fuel >= amount:
-            self.db.fuel -= amount
+        if self.fuel >= amount:
+            self.fuel -= amount
             return True
         return False
 
@@ -21,10 +20,10 @@ class HeatSource(DefaultObject):
         """
         Heat up the heat source.
         """
-        self.db.is_hot = True
+        self.is_hot = True
 
     def cool_down(self):
         """
         Cool down the heat source.
         """
-        self.db.is_hot = False
+        self.is_hot = False

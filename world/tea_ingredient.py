@@ -1,9 +1,8 @@
-from evennia import DefaultObject
+from evennia import DefaultObject, AttributeProperty
 
 class TeaIngredient(DefaultObject):
     """
     Typeclass for tea ingredients.
     """
-    def at_object_creation(self):
-        self.db.tea_type = "generic"  # Tea type (e.g., "green", "black", "water", etc.)
-        self.db.is_wet = False
+    tea_type = AttributeProperty(default="black")
+    is_wet = AttributeProperty(default=False)

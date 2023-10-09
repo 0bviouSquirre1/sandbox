@@ -31,9 +31,9 @@ class TestTea(EvenniaTest):
     def test_heat_up_cool_down(self):
         heat_source = create.create_object(HeatSource, key="test_heat_source")
         heat_source.heat_up()
-        self.assertTrue(heat_source.db.is_hot)
+        self.assertTrue(heat_source.is_hot)
         heat_source.cool_down()
-        self.assertFalse(heat_source.db.is_hot)
+        self.assertFalse(heat_source.is_hot)
 
     def test_brew_command(self):
         # Create a mock caller (you may need to customize this)
@@ -59,7 +59,7 @@ class TestLightHeatSource(EvenniaTest):
         heat_source = create.create_object(HeatSource, key="heat source", location=caller)
 
         # Assert that the heat source is hot
-        self.assertFalse(heat_source.db.is_hot)
+        self.assertFalse(heat_source.is_hot)
 
     def test_light_heat_source_already_lit(self):
         # Create a mock caller
@@ -67,7 +67,7 @@ class TestLightHeatSource(EvenniaTest):
 
         # Create a heat source in the same location and make it hot
         heat_source = create.create_object(HeatSource, key="heat source", location=caller)
-        heat_source.db.is_hot = True
+        heat_source.is_hot = True
 
         # Assert that the heat source is still hot
-        self.assertTrue(heat_source.db.is_hot)
+        self.assertTrue(heat_source.is_hot)
