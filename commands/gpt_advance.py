@@ -31,7 +31,7 @@ class CmdAdvance(Command):
             return
 
         # Trigger the world clock script to advance
-        world_clock = caller.location.scripts.get("world_clock")
+        world_clock = caller.scripts.get("world_clock")
         if world_clock:
             world_clock.at_advance(caller, str(units))
             caller.msg(f"You advanced the world clock by {units} units.")

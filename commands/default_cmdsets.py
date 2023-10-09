@@ -15,7 +15,7 @@ own cmdsets by inheriting from them or directly from `evennia.CmdSet`.
 """
 
 from evennia import default_cmds
-
+from commands import tea_commands
 
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
     """
@@ -34,6 +34,8 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         #
         # any commands you add below will overload the default ones.
         #
+        self.add(tea_commands.CmdBrew)
+        self.add(tea_commands.CmdLight)
 
 
 class AccountCmdSet(default_cmds.AccountCmdSet):

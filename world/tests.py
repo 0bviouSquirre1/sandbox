@@ -1,6 +1,6 @@
 from evennia import utils
 from evennia.utils.test_resources import EvenniaTest
-from world.gpt_worldclock import WorldClock
+from world.world_clock import WorldClock
 
 class TestWorldClock(EvenniaTest):
     """Testing the World Clock Script"""

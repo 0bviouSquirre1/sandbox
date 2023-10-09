@@ -1,8 +1,6 @@
 from evennia import DefaultScript
 from evennia.utils import gametime
 
-# PLACEHOLDER SCRIPT developed by ChatGPT to hold ideas in place
-
 class WorldClock(DefaultScript):
     """
     This script represents a world clock that advances time units when explicitly called.
@@ -14,13 +12,13 @@ class WorldClock(DefaultScript):
         """
         self.key = "world_clock"
         self.desc = "A script for tracking the world clock."
-        self.time_passed = 0
+        self.time_passed = 0 # Time units since game start
 
     def at_start(self):
         """
         This is called when the script is started.
         """
-        self.time_passed = 0  # Initialize the time unit
+        pass # Nothing here, keeping in case of need later
 
     def advance(self, delta):
         """
