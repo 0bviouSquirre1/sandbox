@@ -48,6 +48,44 @@ See the `spawn` command and `evennia.prototypes.spawner.spawn` for more info.
 
 """
 
+lc_string = "world.containers.LiquidContainer"
+
+TEACUP = {
+   "key": "teacup",
+   "typeclass": lc_string,
+   "capacity": 5,
+   "fill_level": 0,
+   "liquid": None,
+   "tags": [("fragile")]
+}
+
+KETTLE = {
+   "key": "kettle",
+   "typeclass": lc_string,
+   "capacity": 10,
+   "fill_level": 0,
+   "liquid": None,
+   "tags": [("heat-resistant")]
+}
+
+BUCKET = {
+   "key": "bucket",
+   "typeclass": lc_string,
+   "capacity": 100,
+   "fill_level": 0,
+   "liquid": None,
+   "tags": []
+}
+
+WELL = {
+   "key": "well",
+   "typeclass": lc_string,
+   "capacity": 1000,
+   "fill_level": 1000,
+   "liquid": "water",
+   "tags": [("refillable")]
+}
+
 ## example of module-based prototypes using
 ## the variable name as `prototype_key` and
 ## simple Attributes

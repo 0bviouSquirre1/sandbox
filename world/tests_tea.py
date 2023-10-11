@@ -1,7 +1,7 @@
 from evennia.utils.test_resources import EvenniaTest, EvenniaCommandTest
 from evennia.utils import create
+from world.containers import LiquidContainer
 from world.tea_ingredient import TeaIngredient
-from world.tea_equipment import TeaEquipment
 from world.heat_sources import HeatSource
 from commands.tea_commands import CmdBrew
 from commands.tea_commands import CmdLight
@@ -17,7 +17,7 @@ class TestTea(EvenniaTest):
 
     def test_create_tea_equipment(self):
         # Create tea equipment
-        tea_equipment = create.create_object(TeaEquipment, key="test_tea_equipment")
+        tea_equipment = create.create_object(LiquidContainer, key="test_tea_equipment")
 
         # Check for default values
         self.assertTrue(tea_equipment)
@@ -64,7 +64,7 @@ class TestBrewCommand(EvenniaCommandTest):
         self.location = self.room1
         self.water = create.create_object(TeaIngredient, key="water")
         self.tea_leaves = create.create_object(TeaIngredient, key="tea leaves")
-        self.kettle = create.create_object(TeaEquipment, key="kettle")
+        self.kettle = create.create_object(LiquidContainer, key="kettle")
         self.heat_source = create.create_object(HeatSource, key="test_heat_source_location")
 
     def test_brew_command(self):
@@ -94,3 +94,6 @@ class TestBrewCommand(EvenniaCommandTest):
         pass
     def test_brew_not_lit(self):
         pass
+
+class TestLightCommand(EvenniaCommandTest):
+    pass
