@@ -1,0 +1,2 @@
+- heat sources should have a surface tag, so that the put X on Y command can apply only to things that are surfaces
+the heat source will do the boiling, anything can be put on the fire pretty much

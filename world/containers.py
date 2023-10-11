@@ -54,21 +54,3 @@ class LiquidContainer(Object):
             # If not, it creates a useless mixture of liquids
             else:
                 self.liquid == "mixture"
-
-    def boil(self, container):
-        string = ""
-        # move checks into the command, leave adjustments here
-        # check for water in kettle
-        # if container has heat-resistant tag and is not empty
-        if container.fill_level != 0 and container.liquid == "water":
-            leaf = search_tag("heat-resistant", location=container)
-            if leaf:
-                leaf = leaf[0]
-                string += f"You have boiled {leaf} tea."
-                container.liquid = f"{leaf} tea"
-            else:
-                string += f"Water boils in the {container}"
-        else:
-            string += f"You can't boil anything without water!"
-
-        return string

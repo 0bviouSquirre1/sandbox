@@ -1,7 +1,6 @@
 from evennia.commands.default.muxcommand import MuxCommand
-from commands.command import Command
-from evennia import CmdSet, utils
-from world.containers import LiquidContainer, BoilContainer
+from evennia import CmdSet
+from world.containers import LiquidContainer
 
 liquid_string = "world.containers.LiquidContainer"
 
@@ -133,6 +132,9 @@ class CmdEmpty(MuxCommand):
             string += f"You empty the {from_container} out on the ground."
 
         caller.msg(string)
+
+class CmdPut(MuxCommand):
+    pass
 
 # class CmdBoil(MuxCommand):
 #     """
