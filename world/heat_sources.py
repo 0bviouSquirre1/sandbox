@@ -1,11 +1,12 @@
-from evennia import DefaultObject, AttributeProperty
+from evennia import AttributeProperty
+from typeclasses.objects import Object
+from world.containers import LiquidContainer
 
-class HeatSource(DefaultObject):
+class HeatSource(Object):
     """
     Typeclass for heat sources.
     """
     fuel = AttributeProperty(default=100) # Initial fuel level (adjust as needed)
-    is_hot = AttributeProperty(default=False)
 
     def burn_fuel(self, amount):
         """
@@ -16,31 +17,32 @@ class HeatSource(DefaultObject):
             return True
         return False
 
-    def heat_up(self):
-        """
-        Heat up the heat source.
-        """
-        self.is_hot = True
-
-    def cool_down(self):
-        """
-        Cool down the heat source.
-        """
-        self.is_hot = False
-
-    def boil(self, container):
-    # Put Container On Heat-Source
-        if self.is_hot == True and container.tag == "heat_resistant":
-            if container.fill_level != 0 and container.liquid == "water":
-                # pass time (... don't remove container)
-                # tag container with warm, then hot, then scalding
-                if container has item labeled potent
-                # create decoction (boil)
-                    container.liquid = f"{leaf} decoction"
-                    # add 1 expiration to the boilable matter
-                else:
-                    container.liquid = None
-                    # set any objects in the container to dry (tag)
-            else:
-                container.liquid = container.liquid
-                # set any objects in the container to dry (tag)
+    def at_object_receive(self, item, source_location):
+        if not self.tags.has("hot"):
+            return
+        
+        if not item.tags.has("heat-resistant"):
+            for obj in item.contents:
+                obj.home = self
+            item.delete()
+            return
+        
+        if not isinstance(item, LiquidContainer) or item.fill_level == 0 or not item.liquid == "water":
+            # item is heat-resistant but not a liquid container
+            # or has no liquid in it
+            # or has something other than water in it
+            item.tags.add("hot")
+            return
+        
+        for obj in item.contents:
+            if obj.tags.has("potent"):
+                leaf = obj
+                return
+            
+        # make decoction
+        if leaf:
+            item.liquid == f"{leaf} decoction"
+            return
+        else:
+            # boil water
+            return

@@ -1,6 +1,5 @@
 from evennia.commands.default.muxcommand import MuxCommand
 from evennia import CmdSet
-from world.containers import LiquidContainer
 
 class CmdPut(MuxCommand):
     """
@@ -16,7 +15,7 @@ class CmdPut(MuxCommand):
 
     def func(self):
         caller = self.caller
-        self.object = self.lhs
+        self.item = self.lhs
         self.surface = self.rhs
 
         # Explain how to use the command when entered with no arguments
@@ -25,33 +24,31 @@ class CmdPut(MuxCommand):
             return
 
         # Find the thing we're putting down
-        object = caller.search(caller)
-        if not object:
-            # No message needed, standard error appears here
+        item = caller.search(self.item, location=caller)
+        if not item:
             return
 
         # Find the surface
         surface = caller.search(self.surface, quiet=True)
         if not surface:
-            caller.msg(f"Where do you want to put the {object}?")
+            caller.msg(f"Where do you want to put the {item}?")
             return
         surface = surface[0]
 
         # Make sure the thing is a surface
-        if not isinstance(surface, LiquidContainer): # tag check here
+        if not surface.tags.has("surface"):
             caller.msg(f"The {surface} is not a surface.")
             return
 
         # Move the object to the surface's inventory here
+        success = item.move_to(surface)
 
+        # Report on how it went
         string = ""
-        if leave and arrive:
-            if surface.fill_level == 0:
-                string += f"You empty the {surface} into the {surface}."
-            else:
-                string += f"You fill the {surface} from the {surface}."
+        if success:
+            string = f"You place the {item} on the {surface}"
         else:
-            "Something went wrong."
+            string = "Something went wrong."
         caller.msg(string)
 
 class InteractionCmdSet(CmdSet):
