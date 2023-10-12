@@ -11,7 +11,8 @@ inheritance.
 
 """
 from evennia.objects.objects import DefaultObject
-
+from django.utils.translation import gettext as _
+from evennia.utils import ansi, create, funcparser, logger, search
 
 class ObjectParent:
     """

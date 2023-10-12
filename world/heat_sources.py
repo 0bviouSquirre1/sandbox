@@ -12,37 +12,21 @@ class HeatSource(Object):
         """
         Burn fuel from the heat source.
         """
-        if self.fuel >= amount:
+        if self.fuel >= amount and self.tags.has("hot"):
             self.fuel -= amount
             return True
         return False
 
-    def at_object_receive(self, item, source_location):
+    def at_object_receive(self, moved_obj, source_location, move_type="move", **kwargs):
         if not self.tags.has("hot"):
-            return
+            self.tags.add("cold")
         
-        if not item.tags.has("heat-resistant"):
-            for obj in item.contents:
-                obj.home = self
-            item.delete()
-            return
+        # if not item.tags.has("heat-resistant"):
+        #     item.tags.add("burnt")
+        #     return False
         
-        if not isinstance(item, LiquidContainer) or item.fill_level == 0 or not item.liquid == "water":
-            # item is heat-resistant but not a liquid container
-            # or has no liquid in it
-            # or has something other than water in it
-            item.tags.add("hot")
-            return
-        
-        for obj in item.contents:
-            if obj.tags.has("potent"):
-                leaf = obj
-                return
-            
-        # make decoction
-        if leaf:
-            item.liquid == f"{leaf} decoction"
-            return
-        else:
-            # boil water
-            return
+        # if not isinstance(item, LiquidContainer):
+        #     item.tags.add("hot")
+        #     return False
+        # else:
+        #     return True
