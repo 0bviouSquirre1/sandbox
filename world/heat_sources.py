@@ -54,4 +54,6 @@ class HeatSource(Object):
                 moved_obj.tags.add("hot")
                 obj.tags.add("hot")
                 obj.tags.add("wet")
+                obj.tags.remove("potent")
                 moved_obj.liquid = f"{obj} decoction"
+                moved_obj.tags.add("potent")
