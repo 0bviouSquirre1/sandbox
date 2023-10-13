@@ -11,3 +11,4 @@ class TestIngredients(EvenniaTest):
 
         # Assert
         self.assertTrue(leaf.tags.has("potent"))
+        self.assertTrue(leaf.power, "default")

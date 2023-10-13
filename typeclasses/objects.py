@@ -172,4 +172,19 @@ class Object(ObjectParent, DefaultObject):
 
     """
 
-    pass
+    def return_appearance(self, looker, **kwargs):
+        """
+        Appends the object's tags to the appearance.
+        
+        """
+        # Capture the original output of the command, we still want it
+        string = super().return_appearance(looker, **kwargs)
+
+        # do not show tag list if no tags
+        if self.tags.all():
+            status = f"\n\nTags: {self.tags.all()}"
+        else:
+            status = ""
+
+        # Append our results to the original output above
+        return string + status

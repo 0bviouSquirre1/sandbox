@@ -2,7 +2,7 @@ from evennia.utils.test_resources import EvenniaTest
 from evennia.utils import create
 from world.heat_sources import HeatSource
 from world.containers import LiquidContainer
-from sandbox.world.ingredients import Ingredient
+from world.ingredients import Ingredient
 
 class TestHeatSource(EvenniaTest):
     def setUp(self):
@@ -95,7 +95,7 @@ class TestHeatSource(EvenniaTest):
 
         # Assert
         self.assertTrue(container.tags.has("hot"))
-        self.assertEqual(container.liquid, f"hot {container.liquid}")
+        self.assertEqual(container.liquid, f"hot tea")
 
     def test_at_object_receive_water_no_stuff(self):
         # Arrange
@@ -109,7 +109,7 @@ class TestHeatSource(EvenniaTest):
         container.move_to(heat_source)
 
         # Assert
-        self.assertEqual(container.liquid, f"boiled {container.liquid}")
+        self.assertEqual(container.liquid, f"boiled water")
         self.assertTrue(container.tags.has("hot"))
 
     def test_at_object_receive_water_with_nontea_stuff(self):
