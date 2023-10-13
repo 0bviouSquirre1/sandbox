@@ -1,18 +1,18 @@
-from evennia.utils.test_resources import EvenniaTest, EvenniaCommandTest
+from evennia.utils.test_resources import EvenniaTest
 from evennia.utils import create
 from world.heat_sources import HeatSource
 from world.containers import LiquidContainer
-from world.tea_ingredient import TeaIngredient
+from sandbox.world.ingredients import Ingredient
 
 class TestHeatSource(EvenniaTest):
     def setUp(self):
         super().setUp()
         self.heat_source = create.create_object(HeatSource, key="heat_source")
         self.container = create.create_object(LiquidContainer, key="container")
-        self.potentate = create.create_object(TeaIngredient, key="potentate")
+        self.ingredient = create.create_object(Ingredient, key="ingredient")
 
         self.container.tags.add("heat-resistant")
-        self.potentate.tags.add("potent")
+        self.ingredient.tags.add("potent")
 
     def test_create_heat_source(self):
         # Arrange
@@ -95,7 +95,7 @@ class TestHeatSource(EvenniaTest):
 
         # Assert
         self.assertTrue(container.tags.has("hot"))
-        self.assertEqual(container.liquid, "hot tea")
+        self.assertEqual(container.liquid, f"hot {container.liquid}")
 
     def test_at_object_receive_water_no_stuff(self):
         # Arrange
@@ -109,7 +109,7 @@ class TestHeatSource(EvenniaTest):
         container.move_to(heat_source)
 
         # Assert
-        self.assertEqual(container.liquid, "boiled water")
+        self.assertEqual(container.liquid, f"boiled {container.liquid}")
         self.assertTrue(container.tags.has("hot"))
 
     def test_at_object_receive_water_with_nontea_stuff(self):
@@ -137,13 +137,13 @@ class TestHeatSource(EvenniaTest):
         container = self.container
         container.liquid = "water"
         container.fill_level = 10
-        self.potentate.location = container
+        self.ingredient.location = container
 
         # Act
         container.move_to(heat_source)
 
         # Assert
-        self.assertEqual(container.liquid, "potentate decoction")
+        self.assertEqual(container.liquid, f"{self.ingredient} decoction")
         self.assertTrue(container.tags.has("hot"))
-        self.assertTrue(self.potentate.tags.has("hot"))
-        self.assertTrue(self.potentate.tags.has("wet"))
+        self.assertTrue(self.ingredient.tags.has("hot"))
+        self.assertTrue(self.ingredient.tags.has("wet"))
