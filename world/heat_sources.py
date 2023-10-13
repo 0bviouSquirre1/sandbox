@@ -1,4 +1,4 @@
-from evennia import AttributeProperty
+from evennia import AttributeProperty, TagProperty
 from typeclasses.objects import Object
 from world.containers import LiquidContainer
 
@@ -7,6 +7,7 @@ class HeatSource(Object):
     Typeclass for heat sources.
     """
     fuel = AttributeProperty(default=100) # Initial fuel level (adjust as needed)
+    surface = TagProperty()
 
     def burn_fuel(self, amount):
         """

@@ -28,7 +28,8 @@ class CmdPut(MuxCommand):
         if not item:
             return
 
-        # Find the surface
+        # caller.search returns a list
+        # find it and take the first entry
         surface = caller.search(self.surface, quiet=True)
         if not surface:
             caller.msg(f"Where do you want to put the {item}?")
