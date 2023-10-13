@@ -6,44 +6,41 @@ class TestLiquidContainer(EvenniaTest):
     def setUp(self):
         super().setUp()
 
+        self.container1 = create.create_object(LiquidContainer, key="container 1")
+        self.container2 = create.create_object(LiquidContainer, key="container 2")
 
     def test_container_defaults(self):
         # Arrange
-        container = create.create_object(LiquidContainer, key="container")
 
         # Act
 
         # Assert
-        self.assertEqual(container.capacity, 10)
-        self.assertEqual(container.fill_level, 0)
-        self.assertEqual(container.liquid, None)
+        self.assertEqual(self.container1.capacity, 10)
+        self.assertEqual(self.container1.fill_level, 0)
+        self.assertEqual(self.container1.liquid, None)
     
     def test_transfer_no_overflow(self):
         # Arrange
-        container1 = create.create_object(LiquidContainer, key="container 1")
-        container2 = create.create_object(LiquidContainer, key="container 2")
-        container1.fill_level = 2
-        container2.fill_level = 4
+        self.container1.fill_level = 2
+        self.container2.fill_level = 4
 
         # Act
-        container1.transfer(-2, None)
-        container2.transfer(2, None)
+        self.container1.transfer(-2, None)
+        self.container2.transfer(2, None)
 
         # Assert
-        self.assertEqual(container1.fill_level, 0)
-        self.assertEqual(container2.fill_level, 6)
+        self.assertEqual(self.container1.fill_level, 0)
+        self.assertEqual(self.container2.fill_level, 6)
 
     def test_transfer_w_overflow(self):
         # Arrange
-        container1 = create.create_object(LiquidContainer, key="container 1")
-        container2 = create.create_object(LiquidContainer, key="container 2")
-        container1.fill_level = 7
-        container2.fill_level = 4
+        self.container1.fill_level = 7
+        self.container2.fill_level = 4
 
         # Act
-        container1.transfer(-7, None)
-        container2.transfer(7, None)
+        self.container1.transfer(-7, None)
+        self.container2.transfer(7, None)
 
         # Assert
-        self.assertEqual(container1.fill_level, 0)
-        self.assertEqual(container2.fill_level, 10)
+        self.assertEqual(self.container1.fill_level, 0)
+        self.assertEqual(self.container2.fill_level, 10)
