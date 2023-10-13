@@ -137,7 +137,7 @@ class TestHeatSource(EvenniaTest):
         container = self.container
         container.liquid = "water"
         container.fill_level = 10
-        self.ingredient.location = container
+        self.ingredient.move_to(container)
 
         # Act
         container.move_to(heat_source)

@@ -48,12 +48,10 @@ class HeatSource(Object):
             if not obj.tags.has("potent"):
                 moved_obj.tags.add("hot")
                 obj.tags.add("hot")
-                obj.tags.add("wet")
                 moved_obj.liquid = f"boiled {moved_obj.liquid}"
             else:
                 moved_obj.tags.add("hot")
                 obj.tags.add("hot")
-                obj.tags.add("wet")
                 obj.tags.remove("potent")
                 moved_obj.liquid = f"{obj} decoction"
                 moved_obj.tags.add("potent")

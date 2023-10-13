@@ -55,3 +55,7 @@ class LiquidContainer(Object):
             # If not, it creates a useless mixture of liquids
             else:
                 self.liquid == "mixture"
+
+    def at_object_receive(self, moved_obj, source_location, move_type="move", **kwargs):
+        if self.liquid != None:
+            moved_obj.tags.add("wet")
