@@ -44,3 +44,17 @@ class TestLiquidContainer(EvenniaTest):
         # Assert
         self.assertEqual(self.container1.fill_level, 0)
         self.assertEqual(self.container2.fill_level, 10)
+
+    def test_transfer_remove_potent(self):
+        # Arrange
+        self.container1.fill_level = 2
+        self.container2.fill_level = 4
+        self.container1.tags.add("potent")
+
+        # Act
+        self.container1.transfer(-2, None)
+        self.container2.transfer(2, None)
+
+        # Assert
+        self.assertEqual(self.container1.fill_level, 0)
+        self.assertFalse(self.container1.tags.has("potent"))

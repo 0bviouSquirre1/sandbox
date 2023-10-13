@@ -47,6 +47,7 @@ class LiquidContainer(Object):
         if self.fill_level <= 0:
             self.fill_level = 0
             self.liquid = None
+            self.tags.remove("potent")
         else:
             # If both containers have the same liquid, no problem
             if self.liquid == liquid:

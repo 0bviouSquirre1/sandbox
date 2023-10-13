@@ -1,3 +1,12 @@
 figure out time
 
 we have a heat-source, a container to put the water and leaf in, and tea comes out in the end
+
+time to finish importing the container commands from perennia
+
+move "wet" tagging from heat source to liquid container
+
+command structure:
+    checks
+    encapsulated method?
+    reports

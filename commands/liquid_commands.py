@@ -21,23 +21,20 @@ class CmdFill(MuxCommand):
         self.to_container = self.lhs
         self.from_container = self.rhs
 
-        # Explain how to use the command when entered with no arguments
         if not self.args:
             caller.msg("Usage: FILL <container> FROM <another container>")
             return
 
-        # Find the receiving container in the user's inventory
-        to_container = caller.search(self.to_container)
+        to_container = caller.search(self.to_container, location=caller)
         if not to_container:
-            # No message needed, standard error appears here
             return
         
-        # Make sure the thing you're filling can hold liquid
         if not isinstance(to_container, LiquidContainer):
             self.caller.msg("You can't fill that!")
             return
 
-        # Find the giving container
+        # caller.search returns a list when quiet=True
+        # remember to take the top item from the list
         from_container = caller.search(self.from_container, quiet=True)
         if not from_container:
             caller.msg(f"Where do you want to fill the {to_container} from?")
@@ -55,20 +52,20 @@ class CmdFill(MuxCommand):
             return
 
         # The number moved between containers should be the same
-        transfer_amount = to_container.capacity - to_container.fill_level
+        if from_container.fill_level >= to_container.capacity - to_container.fill_level:
+            transfer_amount = to_container.capacity - to_container.fill_level
+        else:
+            transfer_amount = from_container.fill_level
         liquid = from_container.liquid
 
-        leave = from_container.transfer(-transfer_amount, liquid)
-        arrive = to_container.transfer(transfer_amount, liquid)
+        from_container.transfer(-transfer_amount, liquid)
+        to_container.transfer(transfer_amount, liquid)
 
         string = ""
-        if leave and arrive:
-            if from_container.fill_level == 0:
-                string += f"You empty the {from_container} into the {to_container}."
-            else:
-                string += f"You fill the {to_container} from the {from_container}."
+        if from_container.fill_level == 0:
+            string += f"You empty the {from_container} into the {to_container}."
         else:
-            "Something went wrong."
+            string += f"You fill the {to_container} from the {from_container}."
         caller.msg(string)
 
 class CmdEmpty(MuxCommand):
@@ -95,11 +92,9 @@ class CmdEmpty(MuxCommand):
             caller.msg("Usage: EMPTY <container> (INTO <another container>)")
             return
 
-        from_container = caller.search(self.from_container, location=caller, quiet=True)
+        from_container = caller.search(self.from_container, location=caller)
         if not from_container:
-            caller.msg(f"You aren't holding a {self.from_container}.")
             return
-        from_container = from_container[0]
         
         if not isinstance(from_container, LiquidContainer):
             caller.msg("You can't empty that!")
@@ -116,59 +111,27 @@ class CmdEmpty(MuxCommand):
         to_container = caller.search(self.to_container, quiet=True)
 
         string = ""
-        if len(to_container) == 1:
-            to_container = to_container[0]
-            if not isinstance(to_container, LiquidContainer):
-                caller.msg(f"You cannot pour {liquid} into the {to_container}.")
-                return
-            
-            empty = to_container.capacity - to_container.fill_level
-            to_container.transfer(transfer_amount, liquid)
+        if not to_container:
+            caller.msg(f"You empty the {from_container} out on the ground.")
+            return
+    
+        to_container = to_container[0]
+        if not isinstance(to_container, LiquidContainer):
+            caller.msg(f"You cannot pour {liquid} into the {to_container}.")
+            return
+        
+        empty_space = to_container.capacity - to_container.fill_level
+        to_container.transfer(transfer_amount, liquid)
 
-            if transfer_amount <= empty:
-                string += f"You empty the {from_container} into the {to_container}."
+        if transfer_amount > empty_space:
+            string += f"You empty the {from_container} into the {to_container}."
             string += f"\nThe rest of the {liquid} splashes all over the ground."
         else:
-            string += f"You empty the {from_container} out on the ground."
+            string += f"You empty the {from_container} into the {to_container}."
 
         caller.msg(string)
-
-class CmdPut(MuxCommand):
-    pass
-
-# class CmdBoil(MuxCommand):
-#     """
-#     Put the kettle on to boil.
-# 
-#     Usage:
-#         BOIL <container>
-#     """
-# 
-#     key = "boil"
-#     help_category = "Interaction"
-# 
-#     def func(self):
-#         caller = self.caller
-# 
-#         if not self.args:
-#             caller.msg("What do you want to boil?")
-#             return
-# 
-#         container = self.caller.search(self.args)
-#         if not container:
-#             return
-#         if not isinstance(container, BoilContainer):
-#             caller.msg("You can't boil that!")
-#             return
-# 
-#         caller.location.msg_contents(
-#             container.boil(container),
-#             from_obj=caller,
-#             mapping={"boiler": container})
-
 
 class LiquidCmdSet(CmdSet):
     def at_cmdset_creation(self):
         self.add(CmdFill)
         self.add(CmdEmpty)
-#       self.add(CmdBoil)
