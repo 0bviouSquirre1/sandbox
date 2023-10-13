@@ -47,7 +47,7 @@ class CmdPut(MuxCommand):
         # Report on how it went
         string = ""
         if success:
-            string = f"You place the {item} on the {surface}"
+            string = f"You place the {item} on the {surface}."
         else:
             string = "Something went wrong."
         caller.msg(string)
