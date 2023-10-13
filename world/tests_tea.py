@@ -8,19 +8,11 @@ class TestHeatSource(EvenniaTest):
     def setUp(self):
         super().setUp()
         self.heat_source = create.create_object(HeatSource, key="heat_source")
-        # self.container = create.create_object(LiquidContainer, key="container")
-        # self.potentate = create.create_object(TeaIngredient, key="potentate")
+        self.container = create.create_object(LiquidContainer, key="container")
+        self.potentate = create.create_object(TeaIngredient, key="potentate")
 
-        # self.potentate.location = self.container
-        # self.container.fill_level = 10
-        # self.potentate.tags.add("potent")
-        # self.container.liquid = "water"
-
-    def tearDown(self):
-        super().tearDown()
-
-        self.heat_source.tags.remove("hot")
-        self.heat_source.tags.remove("cold")
+        self.container.tags.add("heat-resistant")
+        self.potentate.tags.add("potent")
 
     def test_create_heat_source(self):
         # Arrange
@@ -54,57 +46,104 @@ class TestHeatSource(EvenniaTest):
 
         # Assert
         self.assertFalse(heat_source.tags.has("hot"))
-        self.assertTrue(heat_source.tags.has("cold"))
 
-    # def test_at_object_receive_not_heat_resistant(self):
-    #     # Arrange
-    #     heat_source = self.heat_source
-    #     heat_source.tags.add("hot")
+    def test_at_object_receive_not_heat_resistant(self):
+        # Arrange
+        heat_source = self.heat_source
+        heat_source.tags.add("hot")
 
-    #     # Act
-    #     result = self.obj1.move_to(heat_source)
+        # Act
+        self.obj1.move_to(heat_source)
 
-    #     # Assert
-    #     self.assertTrue(self.obj1.tags.has("burnt"))
-    #     self.assertFalse(result)
+        # Assert
+        self.assertTrue(self.obj1.tags.has("burnt"))
 
-    # def test_at_object_receive_not_liquid_container(self):
-    #     # Arrange
-    #     heat_source = self.heat_source
-    #     heat_source.tags.add("hot")
-    #     self.obj1.tags.add("heat-resistant")
+    def test_at_object_receive_not_liquid_container(self):
+        # Arrange
+        heat_source = self.heat_source
+        heat_source.tags.add("hot")
+        self.obj1.tags.add("heat-resistant")
 
-    #     # Act
-    #     print(self.obj1.tags)
-    #     result = self.obj1.move_to(heat_source)
+        # Act
+        self.obj1.move_to(heat_source)
 
-    #     # Assert
-    #     self.assertTrue(self.obj1.tags.has("hot"))
-    #     self.assertTrue(result)
+        # Assert
+        self.assertTrue(self.obj1.tags.has("hot"))
 
-    # def test_at_object_receive_empty(self):
-    #     # Arrange
-    #     heat_source = self.heat_source
-    #     heat_source.tags.add("hot")
+    def test_at_object_receive_empty(self):
+        # Arrange
+        heat_source = self.heat_source
+        heat_source.tags.add("hot")
 
-    #     # Act
-    #     result = self.container.move_to(heat_source)
+        # Act
+        self.container.move_to(heat_source)
 
-    #     # Assert
-    #     self.assertTrue(self.container.tags.has("hot"))
-    #     self.assertFalse(result)
+        # Assert
+        self.assertEqual(self.container.fill_level, 0)
+        self.assertTrue(self.container.tags.has("hot"))
 
-    # def test_at_object_receive_not_water(self):
-    #     # Arrange
-    #     heat_source = self.heat_source
-    #     heat_source.tags.add("hot")
-    #     container = self.container
-    #     container.liquid = "tea"
+    def test_at_object_receive_not_water(self):
+        # Arrange
+        heat_source = self.heat_source
+        heat_source.tags.add("hot")
+        container = self.container
+        container.liquid = "tea"
+        container.fill_level = 10
 
-    #     # Act
-    #     result = container.move_to(heat_source)
+        # Act
+        container.move_to(heat_source)
 
-    #     # Assert
-    #     self.assertTrue(container.tags.has("hot"))
-    #     self.assertEqual(container.liquid, "hot tea")
-    #     self.assertFalse(result)
+        # Assert
+        self.assertTrue(container.tags.has("hot"))
+        self.assertEqual(container.liquid, "hot tea")
+
+    def test_at_object_receive_water_no_stuff(self):
+        # Arrange
+        heat_source = self.heat_source
+        heat_source.tags.add("hot")
+        container = self.container
+        container.liquid = "water"
+        container.fill_level = 10
+
+        # Act
+        container.move_to(heat_source)
+
+        # Assert
+        self.assertEqual(container.liquid, "boiled water")
+        self.assertTrue(container.tags.has("hot"))
+
+    def test_at_object_receive_water_with_nontea_stuff(self):
+        # Arrange
+        heat_source = self.heat_source
+        heat_source.tags.add("hot")
+        container = self.container
+        container.liquid = "water"
+        container.fill_level = 10
+        self.obj1.location = container
+
+        # Act
+        container.move_to(heat_source)
+
+        # Assert
+        self.assertEqual(container.liquid, "boiled water")
+        self.assertTrue(container.tags.has("hot"))
+        self.assertTrue(self.obj1.tags.has("hot"))
+        self.assertTrue(self.obj1.tags.has("wet"))
+
+    def test_at_object_receive_water_with_nontea_stuff(self):
+        # Arrange
+        heat_source = self.heat_source
+        heat_source.tags.add("hot")
+        container = self.container
+        container.liquid = "water"
+        container.fill_level = 10
+        self.potentate.location = container
+
+        # Act
+        container.move_to(heat_source)
+
+        # Assert
+        self.assertEqual(container.liquid, "potentate decoction")
+        self.assertTrue(container.tags.has("hot"))
+        self.assertTrue(self.potentate.tags.has("hot"))
+        self.assertTrue(self.potentate.tags.has("wet"))

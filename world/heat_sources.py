@@ -19,14 +19,38 @@ class HeatSource(Object):
 
     def at_object_receive(self, moved_obj, source_location, move_type="move", **kwargs):
         if not self.tags.has("hot"):
-            self.tags.add("cold")
+            return
         
-        # if not item.tags.has("heat-resistant"):
-        #     item.tags.add("burnt")
-        #     return False
+        if not moved_obj.tags.has("heat-resistant"):
+            moved_obj.tags.add("burnt")
+            return
         
-        # if not isinstance(item, LiquidContainer):
-        #     item.tags.add("hot")
-        #     return False
-        # else:
-        #     return True
+        if not isinstance(moved_obj, LiquidContainer):
+            moved_obj.tags.add("hot")
+            return
+        
+        if moved_obj.fill_level == 0:
+            moved_obj.tags.add("hot")
+            return
+        
+        if moved_obj.liquid != "water":
+            moved_obj.tags.add("hot")
+            moved_obj.liquid = f"hot {moved_obj.liquid}"
+            return
+        
+        if moved_obj.contents == []:
+            moved_obj.tags.add("hot")
+            moved_obj.liquid = f"boiled {moved_obj.liquid}"
+            return
+        
+        for obj in moved_obj.contents:
+            if not obj.tags.has("potent"):
+                moved_obj.tags.add("hot")
+                obj.tags.add("hot")
+                obj.tags.add("wet")
+                moved_obj.liquid = f"boiled {moved_obj.liquid}"
+            else:
+                moved_obj.tags.add("hot")
+                obj.tags.add("hot")
+                obj.tags.add("wet")
+                moved_obj.liquid = f"{obj} decoction"
