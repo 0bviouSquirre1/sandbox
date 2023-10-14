@@ -1,5 +1,34 @@
 from evennia import AttributeProperty, search_tag
+from evennia.utils.utils import lazy_property
 from typeclasses.objects import Object
+
+class LiquidHandler:
+    def __init__(self, container):
+        self.container = container
+
+    def transfer_from(self, amount, to_container=None):
+        if not to_container:
+            self.container.fill_level -= amount
+
+            if self.container.fill_level <= 0:
+                self.container.fill_level = 0
+                self.container.liquid = None
+            return
+
+        self.container.fill_level -= amount
+        to_container.fill_level += amount
+
+        if to_container.liquid == None:
+            to_container.liquid = self.container.liquid
+        elif to_container.liquid != self.container.liquid:
+            to_container.liquid = "mixture"
+
+        if self.container.fill_level <= 0:
+            self.container.fill_level = 0
+            self.container.liquid = None
+
+        if to_container.fill_level > to_container.capacity:
+            to_container.fill_level = to_container.capacity
 
 class LiquidContainer(Object):
     """
@@ -9,6 +38,10 @@ class LiquidContainer(Object):
     capacity = AttributeProperty(10)
     fill_level = AttributeProperty(0)
     liquid = AttributeProperty(None)
+
+    @lazy_property
+    def liquids(self):
+        return LiquidHandler(self)
 
     def at_object_creation(self):
         # Blank out the object's description, just to be tidy
@@ -30,31 +63,6 @@ class LiquidContainer(Object):
 
         # Append our results to the original output above
         return string + status
-
-    def transfer(self, amount, liquid):
-        """
-        Updates the amount of liquid in the container.
-        
-        """
-        # Add the new liquid to the container's liquid
-        self.fill_level += amount
-
-        # If you go over the amount the container can hold, fill to the brim
-        if self.fill_level > self.capacity:
-            self.fill_level = self.capacity
-
-        # If removal results in a negative number, empty the container and remove the liquid
-        if self.fill_level <= 0:
-            self.fill_level = 0
-            self.liquid = None
-            self.tags.remove("potent")
-        else:
-            # If both containers have the same liquid, no problem
-            if self.liquid == liquid:
-                return
-            # If not, it creates a useless mixture of liquids
-            else:
-                self.liquid == "mixture"
 
     def at_object_receive(self, moved_obj, source_location, move_type="move", **kwargs):
         if self.liquid != None:

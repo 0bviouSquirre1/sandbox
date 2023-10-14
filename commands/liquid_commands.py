@@ -52,14 +52,13 @@ class CmdFill(MuxCommand):
             return
 
         # The number moved between containers should be the same
-        if from_container.fill_level >= to_container.capacity - to_container.fill_level:
-            transfer_amount = to_container.capacity - to_container.fill_level
+        to_remainder = to_container.capacity - to_container.fill_level
+        if from_container.fill_level >= to_remainder:
+            transfer_amount = to_remainder
         else:
             transfer_amount = from_container.fill_level
-        liquid = from_container.liquid
 
-        from_container.transfer(-transfer_amount, liquid)
-        to_container.transfer(transfer_amount, liquid)
+        from_container.liquids.transfer_from(transfer_amount, to_container)
 
         string = ""
         if from_container.fill_level == 0:
@@ -106,12 +105,12 @@ class CmdEmpty(MuxCommand):
             return
 
         liquid = from_container.liquid
-        from_container.transfer(-transfer_amount, liquid)
 
         to_container = caller.search(self.to_container, quiet=True)
 
         string = ""
         if not to_container:
+            from_container.liquids.transfer_from(-transfer_amount)
             caller.msg(f"You empty the {from_container} out on the ground.")
             return
     
@@ -120,10 +119,10 @@ class CmdEmpty(MuxCommand):
             caller.msg(f"You cannot pour {liquid} into the {to_container}.")
             return
         
-        empty_space = to_container.capacity - to_container.fill_level
-        to_container.transfer(transfer_amount, liquid)
+        to_remainder = to_container.capacity - to_container.fill_level
+        from_container.liquids.transfer_from(transfer_amount, to_container)
 
-        if transfer_amount > empty_space:
+        if transfer_amount > to_remainder:
             string += f"You empty the {from_container} into the {to_container}."
             string += f"\nThe rest of the {liquid} splashes all over the ground."
         else:

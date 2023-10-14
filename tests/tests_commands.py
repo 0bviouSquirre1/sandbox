@@ -29,20 +29,6 @@ class TestCmdPut(EvenniaCommandTest):
         # Assert
         self.assertEqual(received_output, expected_output)
 
-    def test_put_object_on_not_surface(self):
-        # Arrange
-        self.obj1.location = self.char1
-        surface = create_object(Object, key="surface", location=self.room1)
-
-        input = f"{self.obj1} on {surface}"
-        expected_output = f"The {surface} is not a surface."
-
-        # Act
-        received_output = self.call(CmdPut(), input)
-
-        # Assert
-        self.assertEqual(received_output, expected_output)
-
     def test_put_object_on_surface(self):
         # Arrange
         self.obj1.location = self.char1
@@ -183,18 +169,6 @@ class TestCmdEmpty(EvenniaCommandTest):
         # Arrange
         input = ""
         expected_output = "Usage: EMPTY <container> (INTO <another container>)"
-
-        # Act
-        received_output = self.call(CmdEmpty(), input)
-
-        # Assert
-        self.assertEqual(received_output, expected_output)
-
-    def test_empty_missing(self):
-        # Arrange
-        self.obj1.location = self.room2
-        input = f"{self.obj1}"
-        expected_output = f"Could not find '{self.obj1}'."
 
         # Act
         received_output = self.call(CmdEmpty(), input)

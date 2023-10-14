@@ -10,7 +10,7 @@ class CmdPut(MuxCommand):
     """
 
     key = "put"
-    rhs_split = [" on "]
+    rhs_split = [" on ", " in "]
     help_category = "Interaction"
 
     def func(self):
@@ -36,10 +36,10 @@ class CmdPut(MuxCommand):
             return
         surface = surface[0]
 
-        # Make sure the thing is a surface
-        if not surface.tags.has("surface"):
-            caller.msg(f"The {surface} is not a surface.")
-            return
+        # # Make sure the thing is a surface
+        # if not surface.tags.has("surface"):
+        #     caller.msg(f"The {surface} is not a surface.")
+        #     return
 
         # Move the object to the surface's inventory here
         success = item.move_to(surface)
