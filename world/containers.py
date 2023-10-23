@@ -1,8 +1,9 @@
 from evennia import AttributeProperty, search_tag
+from evennia.contrib.base_systems.components import ComponentHolderMixin, Component
 from evennia.utils.utils import lazy_property
 from typeclasses.objects import Object
 
-class LiquidHandler:
+class LiquidHandler():
     def __init__(self, container):
         self.container = container
 
@@ -30,7 +31,7 @@ class LiquidHandler:
         if to_container.fill_level > to_container.capacity:
             to_container.fill_level = to_container.capacity
 
-class LiquidContainer(Object):
+class LiquidContainer(Object, ComponentHolderMixin):
     """
     Typeclass for containers that hold liquids.
 
@@ -67,3 +68,8 @@ class LiquidContainer(Object):
     def at_object_receive(self, moved_obj, source_location, move_type="move", **kwargs):
         if self.liquid != None:
             moved_obj.tags.add("wet")
+
+class Potency(Component):
+    name = "potency"
+    type = ""
+    duration = 10

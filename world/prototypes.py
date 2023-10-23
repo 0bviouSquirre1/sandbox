@@ -49,6 +49,12 @@ See the `spawn` command and `evennia.prototypes.spawner.spawn` for more info.
 """
 
 lc_string = "world.containers.LiquidContainer"
+ing_string = "world.ingredients.Ingredient"
+
+TEA_LEAF = {
+   "key": "tea leaf",
+   "typeclass": ing_string,
+}
 
 TEACUP = {
    "key": "teacup",

@@ -11,6 +11,4 @@ command structure:
 My suggestion would be to step through it with pdb and see what's going on
 You can drop this incantation into your code to invoke an evennia-aware breakpoint: from evennia import set_trace; set_trace()
 
-put leaf in kettle
-get kettle from hearth
-fill cup from kettle -> doesn't transfer liquid
+fill cup from kettle doesn't transfer potent tag

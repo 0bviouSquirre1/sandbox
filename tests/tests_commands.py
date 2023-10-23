@@ -1,15 +1,15 @@
 from evennia.utils.test_resources import EvenniaCommandTest
-from commands.interaction_commands import CmdPut
+from commands.interaction_commands import CmdPut, CmdGet
 from commands.liquid_commands import CmdFill, CmdEmpty
 from evennia import create_object
 from typeclasses.objects import Object
 from world.containers import LiquidContainer
 
 class TestCmdPut(EvenniaCommandTest):
-    def test_put_no_input(self):
+    def test_put_no_args(self):
         # Arrange
         input = ""
-        expected_output = "Usage: PUT <object> ON <surface>"
+        expected_output = "Usage: PUT <object> (ON/IN) <object>"
 
         # Act
         received_output = self.call(CmdPut(), input)
@@ -165,7 +165,7 @@ class TestCmdFill(EvenniaCommandTest):
         self.assertEqual(received_output, expected_output)
 
 class TestCmdEmpty(EvenniaCommandTest):
-    def test_empty_no_input(self):
+    def test_empty_no_args(self):
         # Arrange
         input = ""
         expected_output = "Usage: EMPTY <container> (INTO <another container>)"
@@ -260,3 +260,55 @@ class TestCmdEmpty(EvenniaCommandTest):
 
         # Assert
         self.assertEqual(received_output, expected_output)
+
+class TestCmdGet(EvenniaCommandTest):
+    def test_get_no_args(self):
+        # Arrange
+        input = ""
+        expected_output = "Usage: GET <object> (FROM <object>)"
+
+        # Act
+        received_output = self.call(CmdGet(), input)
+
+        # Assert
+        self.assertEqual(received_output, expected_output)
+    
+    def test_get_obj_in_room(self):
+        # Arrange
+        input = f"{self.obj1}"
+        expected_output = f"You pick up the {self.obj1}."
+
+        # Act
+        received_output = self.call(CmdGet(), input)
+
+        # Assert
+        self.assertEqual(received_output, expected_output)
+        self.assertEqual(self.obj1.location, self.char1)
+    
+    def test_get_missing_obj(self):
+        # Arrange
+        self.obj1.location = self.room2
+        self.obj2.location = self.room2
+        input = f"{self.obj1}"
+        expected_output = f"Could not find '{self.obj1}'."
+
+        # Act
+        received_output = self.call(CmdGet(), input)
+
+        # Assert
+        self.assertEqual(received_output, expected_output)
+        self.assertNotEqual(self.obj1.location, self.char1)
+
+    def test_get_obj_in_obj(self):
+        # Arrange
+        self.obj2.location = self.char1.location
+        self.obj1.location = self.obj2
+        input = f"{self.obj1} from {self.obj2}"
+        expected_output = f"You retrieve the {self.obj1} from the {self.obj2}."
+
+        # Act
+        received_output = self.call(CmdGet(), input)
+
+        # Assert
+        self.assertEqual(received_output, expected_output)
+        self.assertEqual(self.obj1.location, self.char1)
