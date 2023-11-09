@@ -19,8 +19,6 @@ skip the potency for now, what else can we code until that comes online?
 
 minimum viable sim:
 - character w/ skills (gardening, divining, housekeeping)
--- set AttributeProperty on Character class for each skill
--- start at 0, method for increasing by 1
 -- increases caused by doing "gardening" activities, TBD
 - house w/ shrine space, workspace (kitchen, altar)
 -- altar functions similarly to heat_source

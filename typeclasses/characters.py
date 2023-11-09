@@ -8,9 +8,8 @@ creation commands.
 
 """
 from evennia.objects.objects import DefaultCharacter
-
 from .objects import ObjectParent
-
+from evennia import AttributeProperty
 
 class Character(ObjectParent, DefaultCharacter):
     """
@@ -32,4 +31,19 @@ class Character(ObjectParent, DefaultCharacter):
     at_post_puppet - Echoes "AccountName has entered the game" to the room.
 
     """
-    pass
+    
+    gardening = AttributeProperty(0, category='skills')
+    divining = AttributeProperty(0, category='skills')
+    housekeeping = AttributeProperty(0, category='skills')
+
+    def garden_increase(self, amount):
+        self.gardening += amount
+        return
+    
+    def divining_increase(self, amount):
+        self.divining += amount
+        return
+    
+    def housekeep_increase(self, amount):
+        self.housekeeping += amount
+        return
