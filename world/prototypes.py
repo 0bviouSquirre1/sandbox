@@ -53,7 +53,7 @@ ing_string = "world.ingredients.Ingredient"
 
 TEA_LEAF = {
    "key": "tea leaf",
-   "typeclass": ing_string,
+   "typeclass": ing_string
 }
 
 TEACUP = {

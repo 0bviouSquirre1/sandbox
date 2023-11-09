@@ -46,6 +46,8 @@ class TestHeatSource(EvenniaTest):
 
         # Assert
         self.assertFalse(heat_source.tags.has("hot"))
+        self.assertFalse(self.obj1.tags.has("hot"))
+        self.assertEqual(self.obj1.location, heat_source)
 
     def test_at_object_receive_not_heat_resistant(self):
         # Arrange
@@ -56,7 +58,9 @@ class TestHeatSource(EvenniaTest):
         self.obj1.move_to(heat_source)
 
         # Assert
+        self.assertTrue(heat_source.tags.has("hot"))
         self.assertTrue(self.obj1.tags.has("burnt"))
+        self.assertEqual(self.obj1.location, heat_source)
 
     def test_at_object_receive_not_liquid_container(self):
         # Arrange

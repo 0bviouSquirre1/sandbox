@@ -11,4 +11,48 @@ command structure:
 My suggestion would be to step through it with pdb and see what's going on
 You can drop this incantation into your code to invoke an evennia-aware breakpoint: from evennia import set_trace; set_trace()
 
-fill cup from kettle doesn't transfer potent tag
+fill cup from kettle doesn't transfer potent tag -- currently investigating component contrib
+
+skip the potency for now, what else can we code until that comes online?
+
+---
+
+minimum viable sim:
+- character w/ skills (gardening, divining, housekeeping)
+-- set AttributeProperty on Character class for each skill
+-- start at 0, method for increasing by 1
+-- increases caused by doing "gardening" activities, TBD
+- house w/ shrine space, workspace (kitchen, altar)
+-- altar functions similarly to heat_source
+-- add ingredients and say words, altar does the rest
+- garden w/ plants that grow (mint, mugwort, nightshade)
+-- harvest leaves from mature plants
+-- leaves regrow over time
+- castable spell (harvest blessing)
+-- three of each leaf on the altar
+-- speak blessing
+-- creates a bundle that can be lit as incense?
+
+roadmap:
+
+witchcraft sim -- grow herbs, collect stones & mushrooms, befriend a familiar, harvest animal parts worship the moon and various other planets, discover old spells, learn from travelling witches, maybe create spells, candle magic and knot magic, defend yourself from neighboring practitioners, and meddling townsfolk, reputation and infamy management, draw from graveyard keeper for energy management system
+
+start out apprenticed to the previous local witch, learn the tutorial from them, care for her as she's dying, choose to ease pain and let her sleep or keep her awake to learn more from her, possibly unlock darker magic, even necromancy if you know where to look
+
+divide 24 hours into 5-minute increments (288 chunks) each activity moves the clock forward X chunks and takes some amount of energy
+
+manage time / energy / reputation / infamy
+improve skills & relationships with gods & spirits, planets
+
+some activities are set & forget, some will have consequences when not attended to appropriately
+
+build a bigger house and garden for more plants and shrines. cat familiar reduces rats, frog reduces flies, dog useful for when hostile villagers come to visit. villager attacks can lead to you abandoning your shack and starting over somewhere else, skills improve with use and degrade over time (slowly), raise bees
+
+
+---
+
+common commands:
+
+source evenv/bin/activate
+evennia test --settings settings.py .
+evennia test --settings settings.py tests

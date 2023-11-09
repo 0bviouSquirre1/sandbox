@@ -19,13 +19,14 @@ class HeatSource(Object):
 
     def at_object_receive(self, moved_obj, source_location, move_type="move", **kwargs):
         if not self.tags.has("hot"):
+            print("Oops")
             return
         
-        self.caller.msg(f"The {moved_obj} is heating up..")
+        print(f"The {moved_obj} is heating up..")
         
         if not moved_obj.tags.has("heat-resistant"):
             moved_obj.tags.add("burnt")
-            self.caller.msg(f"The {moved_obj} has been burnt!")
+            print(f"The {moved_obj} has been burnt!")
             return
         
         if not isinstance(moved_obj, LiquidContainer):
@@ -38,13 +39,13 @@ class HeatSource(Object):
         
         if moved_obj.liquid != "water":
             moved_obj.tags.add("hot")
-            self.caller.msg(f"The {moved_obj.liquid} is now hot.")
+            print(f"The {moved_obj.liquid} is now hot.")
             moved_obj.liquid = f"hot {moved_obj.liquid}"
             return
         
         if moved_obj.contents == []:
             moved_obj.tags.add("hot")
-            self.caller.msg(f"The {moved_obj.liquid} is boiling.")
+            print(f"The {moved_obj.liquid} is boiling.")
             moved_obj.liquid = f"boiled {moved_obj.liquid}"
             return
         
@@ -59,4 +60,4 @@ class HeatSource(Object):
                 obj.tags.remove("potent")
                 moved_obj.liquid = f"{obj} decoction"
                 moved_obj.tags.add("potent")
-                self.caller.msg(f"The {moved_obj.liquid} is ready.")
+                print(f"The {moved_obj.liquid} is ready.")
